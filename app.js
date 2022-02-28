@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const dataRoutes = require("./routes/apiData");
 const authRoutes = require("./routes/apiAuth");
@@ -37,9 +38,7 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 
 mongoose
-  .connect(
-    "mongodb+srv://Vimannyu:JFzRIEwbqIhI4Y9B@clustervimwallet.5iycf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-  )
+  .connect(process.env.MONGOOSE_CONNECT)
   .then((result) => {
 app.listen(PORT);
     console.log(`Application is running at port :- ${PORT}`);
