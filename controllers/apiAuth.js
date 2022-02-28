@@ -3,9 +3,8 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
-
+// Created user into the database
 exports.createUser = async function (req, res, next) {
-
   const errors = [];
   if (!validator.isEmail(req.body.email)) {
     errors.push({ message: "E-Mail is invalid." });
@@ -43,9 +42,9 @@ exports.createUser = async function (req, res, next) {
     phone: req.body.phone,
   });
   const createdUser = await user.save();
-  res.status(201).json({id: user._id , email : user.email , user : createdUser } );
-
-  next();
+  res
+    .status(201)
+    .json({ id: user._id.toString(), email: user.email, user: createdUser });
 };
 
 exports.login = async function (req, res, next) {
@@ -71,7 +70,5 @@ exports.login = async function (req, res, next) {
     "somesupersecretsecret",
     { expiresIn: "1h" }
   );
-  res.end('hello world');
   res.status(200).json({ token: token, userId: user._id.toString() });
-  next();
 };

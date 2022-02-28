@@ -16,7 +16,7 @@ const postSchema = new Schema(
       type: Number,
       required : true
     },
-    creator: {
+    initiator: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
