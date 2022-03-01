@@ -1,15 +1,15 @@
-const express = require('express');
-
-// eslint-disable-next-line no-unused-vars
-const User = require('../models/user');
-const apiAuthController = require('../controllers/apiAuth');
-
-const router = express.Router();
-
-router.post('user/signup', apiAuthController.createUser );
+import { Router } from 'express';
 
 
-router.post('user/login', apiAuthController.login);
 
-module.exports = router;
+import { createUser, login } from '../controllers/apiAuth';
+
+const router = Router();
+
+router.post('user/signup', createUser );
+
+
+router.post('user/login', login);
+
+export default router;
 

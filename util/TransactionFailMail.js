@@ -1,9 +1,16 @@
-require("dotenv").config();
+
 
 import { createTransport } from "nodemailer";
 import sendGridtrasnporter from "nodemailer-sendgrid-transport";
 
-const emailFail = async (email , name , money ) => {
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+import dotenv from "dotenv";
+
+dotenv.config({ path: "./config.env" });
+
+
+ export const emailFail = async (email , name , money ) => {
   const auth = {
     auth: {
       api_key: process.env.SENDGRID_API_KEY,

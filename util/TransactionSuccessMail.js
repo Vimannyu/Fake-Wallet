@@ -1,9 +1,16 @@
-require("dotenv").config();
+
 
 import { error, log } from "consola";
 
 import { createTransport } from "nodemailer";
 import sendGridtrasnporter from "nodemailer-sendgrid-transport";
+
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+import dotenv from "dotenv";
+
+dotenv.config({ path: "./config.env" });
+
 
 const emailSucsessTransfer = async (email , name , money ) => {
   const auth = {

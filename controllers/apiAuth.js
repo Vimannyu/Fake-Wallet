@@ -1,13 +1,20 @@
-const bcrypt = require("bcryptjs");
-const validator = require("validator");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 
-const {emailSender} = require("../util/signinMail").default;
+import bcrypt from 'bcryptjs'
 
-const User = require("../models/user");
+import validator from "validator";
+
+import jwt from 'jsonwebtoken'
+
+import crypto from "crypto";
+import User from "../models/user" ;
+
+import {emailSender} from  "../util/signinMail";
+
+export const key = crypto.randomBytes(32).toString('hex');
+
+
 // Created user into the database
-exports.createUser = async function (req, res) {
+export const createUser = async function (req, res) {
   const errors = [];
   if (!validator.isEmail(req.body.email)) {
     errors.push({ message: "E-Mail is invalid." });
@@ -54,7 +61,7 @@ exports.createUser = async function (req, res) {
     .json({ id: user._id.toString(), email: user.email, user: createdUser });
 };
 
-exports.login = async function (req, res, next) {
+export const login = async function (req, res, next) {
   const { email } = req.body;
   const { password } = req.body;
   const user = await User.findOne({ email: email });
@@ -69,7 +76,7 @@ exports.login = async function (req, res, next) {
     error.code = 401;
     throw error;
   }
-  const key = crypto.randomBytes(32).toString('hex');
+
   const token = jwt.sign(
     {
       userId: user._id.toString(),

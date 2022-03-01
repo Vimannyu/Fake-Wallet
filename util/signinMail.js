@@ -1,7 +1,11 @@
-require("dotenv").config();
-
 import { createTransport } from "nodemailer";
 import sendGridtrasnporter from "nodemailer-sendgrid-transport";
+
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+import dotenv from "dotenv";
+
+dotenv.config({ path: "./config.env" });
 
  export const emailSender = async (email , name) => {
   const auth = {
@@ -13,10 +17,10 @@ import sendGridtrasnporter from "nodemailer-sendgrid-transport";
   const trasnporter = createTransport(sendGridtrasnporter(auth));
 
   const sendFrom = "moxoda1145@reimondo.com";
-  let inputuserEmail = email;
+  const inputuserEmail = email;
 
   const mailOptions = {
-    from: sendfrom,
+    from: sendFrom,
     to: inputuserEmail,
     subject: "User Verification",
     html: `<h1>Hi ${name}</h1>
