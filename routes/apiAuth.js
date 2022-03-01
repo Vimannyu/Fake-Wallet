@@ -6,10 +6,10 @@ const apiAuthController = require('../controllers/apiAuth');
 
 const router = express.Router();
 
-router.post('/signup', apiAuthController.createUser );
+router.post('user/signup', apiAuthController.createUser );
 
 
-router.post('/login', apiAuthController.login);
+router.post('user/login', apiAuthController.login);
 
 module.exports = router;
 

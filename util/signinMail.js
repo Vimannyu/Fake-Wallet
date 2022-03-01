@@ -1,16 +1,16 @@
 require("dotenv").config();
 
-const nodemailer = require("nodemailer");
-const sendGridtrasnporter = require("nodemailer-sendgrid-transport");
+import { createTransport } from "nodemailer";
+import sendGridtrasnporter from "nodemailer-sendgrid-transport";
 
-const emailSender = async (email , name) => {
+ export const emailSender = async (email , name) => {
   const auth = {
     auth: {
       api_key: process.env.SENDGRID_API_KEY,
     },
   };
 
-  const trasnporter = nodemailer.createTransport(sendGridtrasnporter(auth));
+  const trasnporter = createTransport(sendGridtrasnporter(auth));
 
   const sendFrom = "moxoda1145@reimondo.com";
   let inputuserEmail = email;
@@ -33,4 +33,4 @@ const emailSender = async (email , name) => {
   });
 };
 
-module.exports = emailSender;
+export default emailSender;

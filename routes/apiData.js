@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post('/transaction', apiDataController.createTransaction);
 
-router.get('/userview/:transactionId', apiDataController.getTransaction);
+router.get('/transactionUserView/:transactionId', apiDataController.getTransaction);
 
 module.exports = router;

@@ -1,8 +1,9 @@
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
-const {emailSender} = require("../middleware/signinMail");
+const {emailSender} = require("../util/signinMail").default;
 
 const User = require("../models/user");
 // Created user into the database
@@ -46,7 +47,7 @@ exports.createUser = async function (req, res) {
   const createdUser = await user.save();
   // now sending sending mail to the user on signing up
 
-   emailSender(user.email, user.name);
+  await emailSender(user.email, user.name);
 
   res
     .status(201)
@@ -68,12 +69,13 @@ exports.login = async function (req, res, next) {
     error.code = 401;
     throw error;
   }
+  const key = crypto.randomBytes(32).toString('hex');
   const token = jwt.sign(
     {
       userId: user._id.toString(),
       email: user.email,
     },
-    "somesupersecretsecret",
+    key ,
     { expiresIn: "1h" }
   );
   res.status(200).json({ token: token, userId: user._id.toString() });

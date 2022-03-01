@@ -1,7 +1,9 @@
 require("dotenv").config();
 
-const nodemailer = require("nodemailer");
-const sendGridtrasnporter = require("nodemailer-sendgrid-transport");
+import { error, log } from "consola";
+
+import { createTransport } from "nodemailer";
+import sendGridtrasnporter from "nodemailer-sendgrid-transport";
 
 const emailSucsessTransfer = async (email , name , money ) => {
   const auth = {
@@ -10,13 +12,13 @@ const emailSucsessTransfer = async (email , name , money ) => {
     },
   };
 
-  const trasnporter = nodemailer.createTransport(sendGridtrasnporter(auth));
+  const trasnporter = createTransport(sendGridtrasnporter(auth));
 
   const sendFrom = "moxoda1145@reimondo.com";
   const inputuserEmail = email;
 
   const mailOptions = {
-    from: sendfrom,
+    from: sendFrom,
     to: inputuserEmail,
     subject: "Sucsessfully transfered",
     html: `<h1>Hi ${name} your money has been succesfully transfered.</h1>
@@ -26,11 +28,11 @@ const emailSucsessTransfer = async (email , name , money ) => {
 
   await trasnporter.sendMail(mailOptions, (err, data) => {
     if (err) {
-      console.log(err);
+      error(err);
     } else {
-      console.log("message Sent: ", data);
+      log("message Sent: ", data);
     }
   });
 };
 
-module.exports = emailSucsessTransfer;
+export default emailSucsessTransfer;

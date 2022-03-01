@@ -1,7 +1,7 @@
 require("dotenv").config();
 
-const nodemailer = require("nodemailer");
-const sendGridtrasnporter = require("nodemailer-sendgrid-transport");
+import { createTransport } from "nodemailer";
+import sendGridtrasnporter from "nodemailer-sendgrid-transport";
 
 const emailFail = async (email , name , money ) => {
   const auth = {
@@ -10,13 +10,13 @@ const emailFail = async (email , name , money ) => {
     },
   };
 
-  const trasnporter = nodemailer.createTransport(sendGridtrasnporter(auth));
+  const trasnporter = createTransport(sendGridtrasnporter(auth));
 
   const sendFrom = "moxoda1145@reimondo.com";
   const inputuserEmail = email;
 
   const mailOptions = {
-    from: sendfrom,
+    from: sendFrom,
     to: inputuserEmail,
     subject: "Failed to transfer your money",
     html: `<h1>Hi ${name} your money has not been transfered due to some issue kindly be patient.</h1>
@@ -33,4 +33,4 @@ const emailFail = async (email , name , money ) => {
   });
 };
 
-module.exports = emailFail;
+export default emailFail;
