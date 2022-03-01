@@ -4,6 +4,8 @@ const validator = require("validator");
 
 const Transaction = require("../models/Transaction");
 const User = require("../models/user");
+const {emailSucsessTransfer} = require("../middleware/TransactionSuccesMail");
+const {emailFail} = require("../middleware/TransactionFailMail");
 
 exports.createTransaction = async function (req, res, next) {
   if (!req.isAuth) {
@@ -77,7 +79,7 @@ exports.createTransaction = async function (req, res, next) {
     createdAt: createdTransaction.createdAt.toISOString(),
     updatedAt: createdTransaction.updatedAt.toISOString(),
   });
-  next();
+
 };
 exports.getTransaction = (req, res, next) => {
   const {transactionId} = req.params;
