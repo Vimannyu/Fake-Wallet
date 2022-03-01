@@ -6,7 +6,7 @@ const sendGridtrasnporter = require("nodemailer-sendgrid-transport");
 const emailSucsessTransfer = async (email , name , money ) => {
   const auth = {
     auth: {
-      api_key: process.env.SENDGRID_API_KEY,
+      api_key: process.env.SENDGRID_API_KEY
     },
   };
 

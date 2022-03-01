@@ -32,15 +32,15 @@ exports.createTransaction = async function (req, res, next) {
     error.code = 422;
     throw error;
   }
-  const user = await User.findById(req.userId);
+  const user = await User.findById(req.body.sender);
   if (!user) {
     const error = new Error("Invalid user.");
     error.code = 401;
     throw error;
   }
   const transaction = new Transaction({
-    from: req.body.sender,
-    to: req.body.recipient,
+    sender: req.body.sender,
+    recipient : req.body.recipient,
     amount: req.body.amount,
     creator: user,
   });

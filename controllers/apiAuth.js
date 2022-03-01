@@ -2,9 +2,11 @@ const bcrypt = require("bcryptjs");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
+const {emailSender} = require("../middleware/signinMail");
+
 const User = require("../models/user");
 // Created user into the database
-exports.createUser = async function (req, res, next) {
+exports.createUser = async function (req, res) {
   const errors = [];
   if (!validator.isEmail(req.body.email)) {
     errors.push({ message: "E-Mail is invalid." });
@@ -42,6 +44,10 @@ exports.createUser = async function (req, res, next) {
     phone: req.body.phone,
   });
   const createdUser = await user.save();
+  // now sending sending mail to the user on signing up
+
+   emailSender(user.email, user.name);
+
   res
     .status(201)
     .json({ id: user._id.toString(), email: user.email, user: createdUser });
