@@ -4,6 +4,7 @@ import sendGridtrasnporter from "nodemailer-sendgrid-transport";
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import dotenv from "dotenv";
+import logger from "../middleware/logger";
 
 dotenv.config({ path: "./config.env" });
 
@@ -30,9 +31,9 @@ dotenv.config({ path: "./config.env" });
 
   await trasnporter.sendMail(mailOptions, (err, data) => {
     if (err) {
-      console.log(err);
+      logger.error(err);
     } else {
-      console.log("message Sent: ", data);
+      logger.error("message Sent: ", data);
     }
   });
 };

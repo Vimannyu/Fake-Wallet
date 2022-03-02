@@ -1,5 +1,5 @@
 import { verify } from 'jsonwebtoken';
-import {key} from '../controllers/apiAuth'
+import {key} from '../controllers/userController'
 
 function authenticateToken(req, res, next){
     const authHeader = req.headers.authorization

@@ -6,8 +6,11 @@ import mongoose from "mongoose";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import dotenv from "dotenv";
 
-import dataRoutes from "./routes/apiTrans";
-import authRoutes from "./routes/apiAuth";
+
+import transRoutes from "./routes/transRoutes";
+
+import userRoutes from "./routes/userRoutes";
+import logger from "./middleware/logger";
 
 dotenv.config({ path: "./config.env" });
 
@@ -25,11 +28,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/wallet/", dataRoutes);
-app.use("/wallet/", authRoutes);
+app.use("/wallet/", transRoutes);
+app.use("/wallet/", userRoutes);
 
 app.use((error, req, res, next) => {
-  console.log(error);
+  logger.error(error);
   const status = error.statusCode || 500;
   const { message } = error;
   const { data } = error;
@@ -42,6 +45,6 @@ mongoose
   .connect(process.env.MONGOOSE_CONNECT)
   .then((result) => {
     app.listen(PORT);
-    console.log(`Application is running at port :- ${PORT}`);
+    logger.info(`Application is running at port :- ${PORT}`);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => logger.error(err));

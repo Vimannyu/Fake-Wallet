@@ -1,12 +1,16 @@
 
 import { isEmpty } from "validator";
 import {emailFail} from "../util/TransactionFailMail";
+// eslint-disable-next-line import/named
 import Transaction, { findById } from "../models/Transaction";
 import {
+  // eslint-disable-next-line import/named
   findById as _findById,
+  // eslint-disable-next-line import/named
   findOne,
+  // eslint-disable-next-line import/named
   updateOne,
-} from "../models/user";
+} from "../models/User";
 import emailSucsessTransfer from "../util/TransactionSuccessMail";
 
 
@@ -69,6 +73,7 @@ export async function createTransaction(req, res, next) {
   updatedSenderBalance = await updateOne({
     bankBalance: updatedSenderBalance,
   });
+  // eslint-disable-next-line no-unused-vars
   updatedRecipientBalance = await updateOne({
     bankBalance: updatedRecipientBalance,
   });

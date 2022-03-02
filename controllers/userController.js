@@ -6,7 +6,7 @@ import validator from "validator";
 import jwt from 'jsonwebtoken'
 
 import crypto from "crypto";
-import User from "../models/user" ;
+import User from "../models/User" ;
 
 import {emailSender} from  "../util/signinMail";
 

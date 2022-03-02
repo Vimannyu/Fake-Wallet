@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 
 
-import { createUser, login } from '../controllers/apiAuth';
+import { createUser, login } from '../controllers/userController';
 
 const router = Router();
 
