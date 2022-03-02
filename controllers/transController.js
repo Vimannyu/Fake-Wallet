@@ -1,20 +1,9 @@
-
 import { isEmpty } from "validator";
-import {emailFail} from "../util/TransactionFailMail";
-// eslint-disable-next-line import/named
-import Transaction, { findById } from "../models/Transaction";
-import {
-  // eslint-disable-next-line import/named
-  findById as _findById,
-  // eslint-disable-next-line import/named
-  findOne,
-  // eslint-disable-next-line import/named
-  updateOne,
-} from "../models/User";
+import { transferMoney, getTransactionByUser } from "../services/transServices";
+import { emailFail } from "../util/TransactionFailMail";
 import emailSucsessTransfer from "../util/TransactionSuccessMail";
 
-
-export async function createTransaction(req, res, next) {
+export async function createTransaction(req, res) {
   if (!req.isAuth) {
     const error = new Error("Not authenticated!");
     error.code = 401;
@@ -41,62 +30,23 @@ export async function createTransaction(req, res, next) {
     error.code = 422;
     throw error;
   }
-  const user = await _findById(req.body.sender);
-  if (!user) {
-    const error = new Error("Invalid user.");
-    error.code = 401;
-    throw error;
-  }
-  const transaction = new Transaction({
-    sender: req.body.sender,
-    recipient: req.body.recipient,
-    amount: req.body.amount,
-    initiator: user,
-  });
 
-  const createdTransaction = await transaction.save();
-  const { amount } = createdTransaction;
- let senderUser = createdTransaction.sender;
- let recipientUser = createdTransaction.recipient;
+  const createdTransaction = await transferMoney(
+    req.body.amount,
+    req.body.sender,
+    req.body.recipient
+  );
 
-   senderUser = await findOne({ name: senderUser });
-
-   recipientUser = await findOne({ name: recipientUser });
-
-  const senderBalance = senderUser.bankBalance;
-  const recipientBalance = recipientUser.bankBalance;
-
-  let updatedSenderBalance = senderBalance - amount;
-  let updatedRecipientBalance = recipientBalance + amount;
-
-  // eslint-disable-next-line no-unused-vars
-  updatedSenderBalance = await updateOne({
-    bankBalance: updatedSenderBalance,
-  });
-  // eslint-disable-next-line no-unused-vars
-  updatedRecipientBalance = await updateOne({
-    bankBalance: updatedRecipientBalance,
-  });
-  await senderUser.save();
-  await recipientUser.save();
-
-  const transfersuccessratio = () => {
-    const score = Math.floor(Math.random() * 10) + 1;
-    if (score > 4) {
-      return true;
-    } 
-      return false;
-    
-  };
-
-  if (transfersuccessratio) {
-    emailSucsessTransfer(req.body.sender, user.email, req.body.amount);
+  if (createdTransaction) {
+    await emailSucsessTransfer(
+      createdTransaction.email,
+      req.body.sender,
+      req.body.amount
+    );
   } else {
-    emailFail(req.body.sender, user.email, req.body.amount);
+    emailFail(createdTransaction.email, req.body.sender, req.body.amount);
   }
 
-  user.transaction.push(createdTransaction);
-  await user.save();
   res.json({
     createdTransaction,
     _id: createdTransaction._id.toString(),
@@ -106,21 +56,12 @@ export async function createTransaction(req, res, next) {
 }
 
 // User view :- only user can see transaction which was done by them.
-export function getTransaction(req, res, next) {
-  const { transactionId } = req.params;
-  findById(transactionId)
-    .then((transaction) => {
-      if (!transaction) {
-        const error = new Error("Could not find transaction.");
-        error.statusCode = 404;
-        throw error;
-      }
-      res.status(200).json({ message: "fetched.", transaction: Transaction });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+export async function getTransaction(req, res) {
+  const getUserViewTransaction = await getTransactionByUser(req.param);
+
+  if (getUserViewTransaction) {
+    res.json({ userTransaction: getUserViewTransaction.transaction });
+  } else {
+    res.json({ Message: " No transaction registered cant fetch abny" });
+  }
 }
