@@ -1,28 +1,22 @@
+/* eslint-disable import/extensions */
 
 
-import { error, log } from "consola";
 
 import { createTransport } from "nodemailer";
 import sendGridtrasnporter from "nodemailer-sendgrid-transport";
 
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import dotenv from "dotenv";
-
-dotenv.config({ path: "./config.env" });
-
-
-const emailSucsessTransfer = async (email , name , money ) => {
+const emailSucsessTransfer = async (  name , money ) => {
   const auth = {
     auth: {
-      api_key: process.env.SENDGRID_API_KEY
+      api_key: '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'
     },
   };
 
   const trasnporter = createTransport(sendGridtrasnporter(auth));
 
   const sendFrom = "moxoda1145@reimondo.com";
-  const inputuserEmail = email;
+  const inputuserEmail = 'vimannyu11m@outlook.com';
 
   const mailOptions = {
     from: sendFrom,
@@ -33,11 +27,11 @@ const emailSucsessTransfer = async (email , name , money ) => {
             `,
   };
 
-  await trasnporter.sendMail(mailOptions, (err, data) => {
+   trasnporter.sendMail(mailOptions, (err, data) => {
     if (err) {
-      error(err);
+      console.log(err);
     } else {
-      log("message Sent: ", data);
+     console.log("message Sent: ", data);
     }
   });
 };

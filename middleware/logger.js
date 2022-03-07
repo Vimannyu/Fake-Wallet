@@ -3,6 +3,7 @@ import { format, createLogger, transports } from 'winston';
 const { timestamp, combine, printf, errors } = format;
 
 function logger() {
+  // eslint-disable-next-line no-shadow
   const logFormat = printf(({ level, message, timestamp, stack }) => `${timestamp} ${level}: ${stack || message}`);
 
   return createLogger({

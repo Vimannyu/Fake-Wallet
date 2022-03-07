@@ -1,20 +1,17 @@
+/* eslint-disable import/extensions */
 
 import validator from "validator";
 import jwt from "jsonwebtoken";
 
 import crypto from "crypto";
-import { emailSender } from "../util/signinMail";
+import { emailSender } from "../util/signinMail.js";
 
-
-import {
-  createUser,
-  loginCheckDB,
-} from "../services/userServices";
+import { createUser, loginCheckDB } from "../services/userServices.js";
 //global key
 export const key = crypto.randomBytes(32).toString("hex");
 
 // Created user into the database
-export const signup = async function (req, res) {
+export const signup = async function (req, res , next) {
   const errors = [];
   if (!validator.isEmail(req.body.email)) {
     errors.push({ message: "E-Mail is invalid." });
@@ -45,20 +42,23 @@ export const signup = async function (req, res) {
     req.body.password,
     req.body.phone
   );
-  if (serviceUser) {
-    await emailSender(res.body.email, res.body.name);
+  try {
+    if (serviceUser) {
+      console.log('here');
+      await emailSender(res.body.email, res.body.name);
+    }
+  } catch (err) {
+    console.log("problem in email server");
   }
-
-  res
-    .status(201)
-    .json({
-      id: serviceUser._id.toString(),
-      email: serviceUser.email,
-      user: serviceUser.user,
-    });
+  res.status(201).json({
+    id: serviceUser._id.toString(),
+    email: serviceUser.email,
+    user: serviceUser.user,
+  });
+  next();
 };
 
-export const login = async function (req, res) {
+export const login = async function (req, res , next) {
   const DBloginCheck = await loginCheckDB(req.body.email, req.body.password);
 
   if (DBloginCheck) {
@@ -71,5 +71,7 @@ export const login = async function (req, res) {
       { expiresIn: "1h" }
     );
     res.status(200).json({ token: token, userId: DBloginCheck.id });
+    
   }
+  next();
 };

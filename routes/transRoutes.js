@@ -1,13 +1,14 @@
+/* eslint-disable import/extensions */
 import { Router } from 'express';
-import authenticateToken from "../middleware/jwt"
-
-import { createTransaction, getTransaction } from '../controllers/transController';
-
-const router = Router();
 
 
-router.post('/transaction', createTransaction);
+import { createTransaction, getTransaction } from '../controllers/transController.js';
 
-router.get('/transactionUserView/:transactionId', authenticateToken , getTransaction);
+const transRoutes = Router();
 
-export default router;
+
+transRoutes.post('/transaction', createTransaction);
+
+transRoutes.post('/transactionUserView', getTransaction);
+
+export default transRoutes;

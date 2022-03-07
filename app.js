@@ -1,18 +1,19 @@
+/* eslint-disable import/extensions */
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import { createUser, loginCheckDB } from "./services/userServices.js";
+import { transferMoney , getTransactionByUser } from "./services/transServices.js";
 
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import dotenv from "dotenv";
 
 
-import transRoutes from "./routes/transRoutes";
 
-import userRoutes from "./routes/userRoutes";
-import logger from "./middleware/logger";
+import transRoutes from "./routes/transRoutes.js";
 
-dotenv.config({ path: "./config.env" });
+import userRoutes from "./routes/userRoutes.js";
+
 
 const app = express();
 
@@ -28,11 +29,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/wallet/", transRoutes);
-app.use("/wallet/", userRoutes);
+app.use("/wallet", transRoutes);
+app.use("/wallet", userRoutes);
 
 app.use((error, req, res, next) => {
-  logger.error(error);
+  console.error(error);
   const status = error.statusCode || 500;
   const { message } = error;
   const { data } = error;
@@ -42,9 +43,17 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 
 mongoose
-  .connect(process.env.MONGOOSE_CONNECT)
+  .connect("mongodb+srv://Vimannyu:JFzRIEwbqIhI4Y9B@clustervimwallet.5iycf.mongodb.net/walletDatabase?retryWrites=true&w=majority")
   .then((result) => {
     app.listen(PORT);
-    logger.info(`Application is running at port :- ${PORT}`);
+    console.log(`Application is running at port :- ${PORT}`);
+   // createUser('Itachi Uchiha' , 'itachi@sharingan.com' , 'sasukebro' , 3456541223).then((values)=>{console.log(values)} );;
+   // createUser('eren jeager' , 'eren@sharingan.com' , 'attacktitan' , 3456541223).then((values)=>{console.log(values)} );;
+   //transferMoney(20 , 'Itachi Uchiha' , 'eren jeager'  ).then((values)=>{console.log(values)} );
+   //getTransactionByUser('Itachi Uchiha').then((values)=>{console.log(values)} );
+   
+
+
+    
   })
-  .catch((err) => logger.error(err));
+  .catch((err) => console.error(err));

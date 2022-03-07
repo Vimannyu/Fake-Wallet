@@ -1,17 +1,15 @@
+/* eslint-disable import/extensions */
 import { createTransport } from "nodemailer";
 import sendGridtrasnporter from "nodemailer-sendgrid-transport";
 
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import dotenv from "dotenv";
-import logger from "../middleware/logger";
 
-dotenv.config({ path: "./config.env" });
+
 
  export const emailSender = async (email , name) => {
   const auth = {
     auth: {
-      api_key: process.env.SENDGRID_API_KEY,
+      api_key: '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',
     },
   };
 
@@ -29,11 +27,11 @@ dotenv.config({ path: "./config.env" });
             `,
   };
 
-  await trasnporter.sendMail(mailOptions, (err, data) => {
+   trasnporter.sendMail(mailOptions, (err, data) => {
     if (err) {
-      logger.error(err);
+      console.log(err);
     } else {
-      logger.error("message Sent: ", data);
+      console.log("message Sent: ", data);
     }
   });
 };

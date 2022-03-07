@@ -1,15 +1,17 @@
+/* eslint-disable import/extensions */
 import { Router } from 'express';
+import authenticateToken from "../middleware/jwt.js"
 
 
 
-import { createUser, login } from '../controllers/userController';
+import { signup, login } from '../controllers/userController.js';
 
-const router = Router();
+const userRoutes = Router();
 
-router.post('user/signup', createUser );
+userRoutes.post('user/signup', signup );
 
 
-router.post('user/login', login);
+userRoutes.post('user/login', authenticateToken ,  login);
 
-export default router;
+export default userRoutes;
 
