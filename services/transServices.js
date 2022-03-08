@@ -16,6 +16,8 @@ export const transferMoney = async (amount, sender, recipient) => {
     initiator: user,
   });
 
+  
+
   const savedTransaction = await transaction.save();
   const Amount = savedTransaction.amount;
   let senderUser = savedTransaction.sender;
@@ -24,9 +26,15 @@ export const transferMoney = async (amount, sender, recipient) => {
   senderUser = await User.findOne({ name: senderUser });
 
   recipientUser = await User.findOne({ name: recipientUser });
+  
 
   const senderBalance = senderUser.bankBalance;
   const recipientBalance = recipientUser.bankBalance;
+
+  if (senderBalance <= 0 ){
+    return 'User bank balance is empty' ;
+    
+  }
 
   let updatedSenderBalance = senderBalance - Amount;
   let updatedRecipientBalance = recipientBalance + Amount;
@@ -60,7 +68,10 @@ export const getTransactionByUser = async (sender) => {
 
     const transId = oneuser.transactionID;
 
-    return { message: `fetched. Transaction Ids of user ${oneuser.name} `, transaction: transId };
+    return {
+      message: `fetched. Transaction Ids of user ${oneuser.name} `,
+      transaction: transId,
+    };
   } catch (err) {
     console.log("user cant be found");
   }

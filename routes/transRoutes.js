@@ -11,4 +11,5 @@ transRoutes.post('/transaction', createTransaction);
 
 transRoutes.post('/transactionUserView', getTransaction);
 
+
 export default transRoutes;

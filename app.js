@@ -1,21 +1,32 @@
+/* eslint-disable node/no-unpublished-import */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/extensions */
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import { createUser, loginCheckDB } from "./services/userServices.js";
-import { transferMoney , getTransactionByUser } from "./services/transServices.js";
 
-
-// eslint-disable-next-line import/no-extraneous-dependencies
-
-
-
+import dotenv from "dotenv";
 import transRoutes from "./routes/transRoutes.js";
 
 import userRoutes from "./routes/userRoutes.js";
 
-
+dotenv.config({ path: "./config.env" });
 const app = express();
+
+mongoose
+  .connect(
+    "mongodb+srv://Vimannyu:JFzRIEwbqIhI4Y9B@clustervimwallet.5iycf.mongodb.net/walletDatabase?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log(`DB CONNECTION SUCCESSFUL`);
+  })
+  .catch((err) => console.error(err));
+
+const port = 8000;
+
+const server = app.listen(port, () => {
+  console.log(`App running on port ${port}!!`);
+});
 
 app.use(bodyParser.json());
 
@@ -29,8 +40,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/wallet", transRoutes);
-app.use("/wallet", userRoutes);
+app.use("/api/v1/trans", transRoutes);
+app.use("/api/v1/user", userRoutes);
 
 app.use((error, req, res, next) => {
   console.error(error);
@@ -39,21 +50,3 @@ app.use((error, req, res, next) => {
   const { data } = error;
   res.status(status).json({ message: message, data: data });
 });
-
-const PORT = process.env.PORT || 3000;
-
-mongoose
-  .connect("mongodb+srv://Vimannyu:JFzRIEwbqIhI4Y9B@clustervimwallet.5iycf.mongodb.net/walletDatabase?retryWrites=true&w=majority")
-  .then((result) => {
-    app.listen(PORT);
-    console.log(`Application is running at port :- ${PORT}`);
-   // createUser('Itachi Uchiha' , 'itachi@sharingan.com' , 'sasukebro' , 3456541223).then((values)=>{console.log(values)} );;
-   // createUser('eren jeager' , 'eren@sharingan.com' , 'attacktitan' , 3456541223).then((values)=>{console.log(values)} );;
-   //transferMoney(20 , 'Itachi Uchiha' , 'eren jeager'  ).then((values)=>{console.log(values)} );
-   //getTransactionByUser('Itachi Uchiha').then((values)=>{console.log(values)} );
-   
-
-
-    
-  })
-  .catch((err) => console.error(err));

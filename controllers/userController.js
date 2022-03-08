@@ -1,37 +1,28 @@
 /* eslint-disable import/extensions */
 
-import validator from "validator";
-import jwt from "jsonwebtoken";
+import validator from 'validator';
+import jwt from 'jsonwebtoken';
 
-import crypto from "crypto";
-import { emailSender } from "../util/signinMail.js";
+import { emailSender } from '../util/signinMail.js';
 
-import { createUser, loginCheckDB } from "../services/userServices.js";
-//global key
-export const key = crypto.randomBytes(32).toString("hex");
+import { createUser, loginCheckDB } from '../services/userServices.js';
+
 
 // Created user into the database
-export const signup = async function (req, res , next) {
+export const signup = async function (req, res, next) {
   const errors = [];
   if (!validator.isEmail(req.body.email)) {
-    errors.push({ message: "E-Mail is invalid." });
+    errors.push({ message: 'E-Mail is invalid.' });
   }
   if (
     validator.isEmpty(req.body.password) ||
     !validator.isLength(req.body.password, { min: 8 })
   ) {
-    errors.push({ message: "Password too short!" });
+    errors.push({ message: 'Password too short!' });
   }
-  if (
-    !validator.isLength(req.body.phone, { min: 10 }) ||
-    validator.isEmpty(req.body.phone)
-  );
-  // eslint-disable-next-line no-lone-blocks
-  {
-    errors.push({ message: "Phone number is invalid" });
-  }
+  
   if (errors.length > 0) {
-    const error = new Error("Invalid input.");
+    const error = new Error('Invalid input.');
     error.data = errors;
     error.code = 422;
     throw error;
@@ -44,21 +35,22 @@ export const signup = async function (req, res , next) {
   );
   try {
     if (serviceUser) {
-      console.log('here');
-      await emailSender(res.body.email, res.body.name);
+       emailSender(res.body.email, res.body.name);
     }
   } catch (err) {
-    console.log("problem in email server");
+    console.log('problem in email server');
   }
   res.status(201).json({
-    id: serviceUser._id.toString(),
+    id: serviceUser._id,
     email: serviceUser.email,
     user: serviceUser.user,
   });
   next();
 };
 
-export const login = async function (req, res , next) {
+
+
+export const login = async function (req, res, next) {
   const DBloginCheck = await loginCheckDB(req.body.email, req.body.password);
 
   if (DBloginCheck) {
@@ -67,11 +59,10 @@ export const login = async function (req, res , next) {
         userId: DBloginCheck.id,
         email: DBloginCheck.email,
       },
-      key,
-      { expiresIn: "1h" }
+      'tokenkeytoken',
+      { expiresIn: '1h' }
     );
     res.status(200).json({ token: token, userId: DBloginCheck.id });
-    
   }
   next();
 };

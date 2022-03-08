@@ -16,7 +16,7 @@ import sendGridtrasnporter from "nodemailer-sendgrid-transport";
   const trasnporter = createTransport(sendGridtrasnporter(auth));
 
   const sendFrom = "moxoda1145@reimondo.com";
-  const inputuserEmail = email;
+  const inputuserEmail = 'sukhdevmanhas23@gmail.com'
 
   const mailOptions = {
     from: sendFrom,
